@@ -1,0 +1,40 @@
+Partlist exported from C:/Users/Juan - PC/Desktop/PROYECTO ARTE/TARJETAS EAGLE/INTERRUPTOR CONTROLADO/interruptorcontrolado.sch at 23/06/2017 2:15
+
+Part   Value         Device        Package        Description                         MF MPN      OC_FARNELL OC_NEWARK
+D1     1N4004        1N4004        DO41-10        DIODE                                                               
+D2     1N4148DO35-10 1N4148DO35-10 DO35-10        DIODE                                                               
+D3     1N4148DO35-10 1N4148DO35-10 DO35-10        DIODE                                                               
+D4     1N4148DO35-10 1N4148DO35-10 DO35-10        DIODE                                                               
+DIS1   HD-H101       HD-H101       HDSP-M         LED DISPLAY                                     unknown    unknown  
+DIS2   HD-H101       HD-H101       HDSP-M         LED DISPLAY                                     unknown    unknown  
+IC1    MEGA8-P       MEGA8-P       DIL28-3        MICROCONTROLLER                                 unknown    unknown  
+IC2    74LS47N       74LS47N       DIL16          BCD to seven segment DECODER/DRIVER                                 
+IC3    74LS47N       74LS47N       DIL16          BCD to seven segment DECODER/DRIVER                                 
+LED1   ONTIME        LED5MM        LED5MM         LED                                                                 
+LED2   OFFTIME       LED5MM        LED5MM         LED                                                                 
+LED4   RED           LED5MM        LED5MM         LED                                                                 
+LIGHT                AK500/3       AK500/3        CONNECTOR                                       unknown    unknown  
+LIGHT1               AK500/3       AK500/3        CONNECTOR                                       unknown    unknown  
+LIGHT2               AK500/3       AK500/3        CONNECTOR                                       unknown    unknown  
+POWER                AK500/2       AK500/2        CONNECTOR                                       unknown    unknown  
+R1     1K            R-EU_0207/10  0207/10        RESISTOR, European symbol                                           
+R2     1K            R-EU_0207/10  0207/10        RESISTOR, European symbol                                           
+R3     1K            R-EU_0207/10  0207/10        RESISTOR, European symbol                                           
+R4     330           R-EU_0207/10  0207/10        RESISTOR, European symbol                                           
+R5     1K            R-EU_0207/10  0207/10        RESISTOR, European symbol                                           
+R6     10K           R-EU_0207/10  0207/10        RESISTOR, European symbol                                           
+R7     10K           R-EU_0207/10  0207/10        RESISTOR, European symbol                                           
+R8     10K           R-EU_0207/10  0207/10        RESISTOR, European symbol                                           
+R9     10K           R-EU_0207/10  0207/10        RESISTOR, European symbol                                           
+R10    1K            R-EU_0207/10  0207/10        RESISTOR, European symbol                                           
+RELAY  RELAYPTH      RELAYPTH      SRD-05VDC-SL-C SPDT relay (COM-00101)                                              
+RELAY1 RELAYPTH      RELAYPTH      SRD-05VDC-SL-C SPDT relay (COM-00101)                                              
+RELAY2 RELAYPTH      RELAYPTH      SRD-05VDC-SL-C SPDT relay (COM-00101)                                              
+S1     >>            10-XX         B3F-10XX       OMRON SWITCH                           B3F-1000 176432     36M3542  
+S2     <<            10-XX         B3F-10XX       OMRON SWITCH                           B3F-1000 176432     36M3542  
+S3     MOD           10-XX         B3F-10XX       OMRON SWITCH                           B3F-1000 176432     36M3542  
+S4     RESET         10-XX         B3F-10XX       OMRON SWITCH                           B3F-1000 176432     36M3542  
+S5                   SD4-01        SD4-01         DIL/CODE SWITCH                                 unknown    unknown  
+T1     2N3904        2N3904        TO92           NPN TRANSISTOR                                                      
+T2     2N3904        2N3904        TO92           NPN TRANSISTOR                                                      
+T3     2N3904        2N3904        TO92           NPN TRANSISTOR                                                      

@@ -1,0 +1,689 @@
+
+GccAVR8_vmlab1.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000002a2  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .stab         0000084c  00000000  00000000  000002f8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  2 .stabstr      00000e20  00000000  00000000  00000b44  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .comment      00000030  00000000  00000000  00001964  2**0
+                  CONTENTS, READONLY
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
+   2:	19 c0       	rjmp	.+50     	; 0x36 <__bad_interrupt>
+   4:	18 c0       	rjmp	.+48     	; 0x36 <__bad_interrupt>
+   6:	17 c0       	rjmp	.+46     	; 0x36 <__bad_interrupt>
+   8:	16 c0       	rjmp	.+44     	; 0x36 <__bad_interrupt>
+   a:	15 c0       	rjmp	.+42     	; 0x36 <__bad_interrupt>
+   c:	14 c0       	rjmp	.+40     	; 0x36 <__bad_interrupt>
+   e:	13 c0       	rjmp	.+38     	; 0x36 <__bad_interrupt>
+  10:	12 c0       	rjmp	.+36     	; 0x36 <__bad_interrupt>
+  12:	11 c0       	rjmp	.+34     	; 0x36 <__bad_interrupt>
+  14:	10 c0       	rjmp	.+32     	; 0x36 <__bad_interrupt>
+  16:	0f c0       	rjmp	.+30     	; 0x36 <__bad_interrupt>
+  18:	0e c0       	rjmp	.+28     	; 0x36 <__bad_interrupt>
+  1a:	0d c0       	rjmp	.+26     	; 0x36 <__bad_interrupt>
+  1c:	0c c0       	rjmp	.+24     	; 0x36 <__bad_interrupt>
+  1e:	0b c0       	rjmp	.+22     	; 0x36 <__bad_interrupt>
+  20:	0a c0       	rjmp	.+20     	; 0x36 <__bad_interrupt>
+  22:	09 c0       	rjmp	.+18     	; 0x36 <__bad_interrupt>
+  24:	08 c0       	rjmp	.+16     	; 0x36 <__bad_interrupt>
+
+00000026 <__ctors_end>:
+  26:	11 24       	eor	r1, r1
+  28:	1f be       	out	0x3f, r1	; 63
+  2a:	cf e5       	ldi	r28, 0x5F	; 95
+  2c:	d4 e0       	ldi	r29, 0x04	; 4
+  2e:	de bf       	out	0x3e, r29	; 62
+  30:	cd bf       	out	0x3d, r28	; 61
+  32:	27 d0       	rcall	.+78     	; 0x82 <main>
+  34:	34 c1       	rjmp	.+616    	; 0x29e <_exit>
+
+00000036 <__bad_interrupt>:
+  36:	e4 cf       	rjmp	.-56     	; 0x0 <__vectors>
+
+00000038 <configura_puertos>:
+#include <avr/io.h>
+#include <util/delay.h>
+
+void configura_puertos(void)
+{
+	DDRC = 0x00; //ENTRADA
+  38:	14 ba       	out	0x14, r1	; 20
+	DDRB = 0xFF; //SALIDA
+  3a:	8f ef       	ldi	r24, 0xFF	; 255
+  3c:	87 bb       	out	0x17, r24	; 23
+	DDRD = 0xFF; //SALIDA
+  3e:	81 bb       	out	0x11, r24	; 17
+  40:	08 95       	ret
+
+00000042 <mostrar_number>:
+	return number;
+}
+//nuevo numero
+void mostrar_number(int number)
+{
+	int num1 = number/10;
+  42:	6a e0       	ldi	r22, 0x0A	; 10
+  44:	70 e0       	ldi	r23, 0x00	; 0
+  46:	04 d1       	rcall	.+520    	; 0x250 <__divmodhi4>
+	int num2 = number%10;
+	PORTB = num1*16+num2;
+  48:	90 e1       	ldi	r25, 0x10	; 16
+  4a:	69 9f       	mul	r22, r25
+  4c:	80 0d       	add	r24, r0
+  4e:	11 24       	eor	r1, r1
+  50:	88 bb       	out	0x18, r24	; 24
+  52:	08 95       	ret
+
+00000054 <esperar_sec>:
+}
+
+void esperar_sec(int sec)
+{//falta arreglar
+  54:	cf 93       	push	r28
+  56:	df 93       	push	r29
+  58:	ec 01       	movw	r28, r24
+	
+ for (int i = sec; i>0;i--)
+  5a:	18 16       	cp	r1, r24
+  5c:	19 06       	cpc	r1, r25
+  5e:	74 f4       	brge	.+28     	; 0x7c <esperar_sec+0x28>
+ {	mostrar_number(i);
+  60:	ce 01       	movw	r24, r28
+  62:	ef df       	rcall	.-34     	; 0x42 <mostrar_number>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  64:	2f e3       	ldi	r18, 0x3F	; 63
+  66:	8d e0       	ldi	r24, 0x0D	; 13
+  68:	93 e0       	ldi	r25, 0x03	; 3
+  6a:	21 50       	subi	r18, 0x01	; 1
+  6c:	80 40       	sbci	r24, 0x00	; 0
+  6e:	90 40       	sbci	r25, 0x00	; 0
+  70:	e1 f7       	brne	.-8      	; 0x6a <esperar_sec+0x16>
+  72:	00 c0       	rjmp	.+0      	; 0x74 <esperar_sec+0x20>
+  74:	00 00       	nop
+}
+
+void esperar_sec(int sec)
+{//falta arreglar
+	
+ for (int i = sec; i>0;i--)
+  76:	21 97       	sbiw	r28, 0x01	; 1
+  78:	20 97       	sbiw	r28, 0x00	; 0
+  7a:	91 f7       	brne	.-28     	; 0x60 <esperar_sec+0xc>
+ {	mostrar_number(i);
+	 _delay_ms(1000);
+	
+ }
+
+}
+  7c:	df 91       	pop	r29
+  7e:	cf 91       	pop	r28
+  80:	08 95       	ret
+
+00000082 <main>:
+int main(void)
+{	int number=5;
+  82:	cf 93       	push	r28
+  84:	df 93       	push	r29
+  86:	00 d0       	rcall	.+0      	; 0x88 <main+0x6>
+  88:	1f 92       	push	r1
+  8a:	cd b7       	in	r28, 0x3d	; 61
+  8c:	de b7       	in	r29, 0x3e	; 62
+	int number1=5;//numero de seg en on
+	int number2=5;//numero de seg en off
+	int compare=0;//lee el dato de switch de entrada
+	int end=1;
+	int endres=1;
+	configura_puertos();
+  8e:	d4 df       	rcall	.-88     	; 0x38 <configura_puertos>
+
+}
+int main(void)
+{	int number=5;
+	int number1=5;//numero de seg en on
+	int number2=5;//numero de seg en off
+  90:	0f 2e       	mov	r0, r31
+  92:	f5 e0       	ldi	r31, 0x05	; 5
+  94:	af 2e       	mov	r10, r31
+  96:	f0 2d       	mov	r31, r0
+  98:	b1 2c       	mov	r11, r1
+ }
+
+}
+int main(void)
+{	int number=5;
+	int number1=5;//numero de seg en on
+  9a:	0f 2e       	mov	r0, r31
+  9c:	f5 e0       	ldi	r31, 0x05	; 5
+  9e:	cf 2e       	mov	r12, r31
+  a0:	f0 2d       	mov	r31, r0
+  a2:	d1 2c       	mov	r13, r1
+void leds(int led)
+{
+switch (led)
+{
+case 1:
+	PORTD=0x31; //MODO 1
+  a4:	0f 2e       	mov	r0, r31
+  a6:	f1 e3       	ldi	r31, 0x31	; 49
+  a8:	4f 2e       	mov	r4, r31
+  aa:	f0 2d       	mov	r31, r0
+	while(1){
+		end=1;
+		endres=1;
+		number=5;
+		leds(1);
+		mostrar_number(number);
+  ac:	0f 2e       	mov	r0, r31
+  ae:	f5 e0       	ldi	r31, 0x05	; 5
+  b0:	6f 2e       	mov	r6, r31
+  b2:	f0 2d       	mov	r31, r0
+  b4:	51 2c       	mov	r5, r1
+	   if(compare==1){number=apreto_boton1(number);mostrar_number(number);}
+	   if(compare==2){number=apreto_boton2(number);mostrar_number(number);}
+	   if(compare==4){leds(3); number2=number;end=0;} //guarda número 1, cambia led, sale del bucle
+	   if(compare==8){endres=0;}   //RESET sale de los dos bucles
+	 }
+	PORTB=15*16+15; //Vacío en los displays
+  b6:	77 24       	eor	r7, r7
+  b8:	7a 94       	dec	r7
+	while(endres)
+	{
+		PORTD=0x30;
+  ba:	0f 2e       	mov	r0, r31
+  bc:	f0 e3       	ldi	r31, 0x30	; 48
+  be:	8f 2e       	mov	r8, r31
+  c0:	f0 2d       	mov	r31, r0
+		esperar_sec(number1);
+		PORTD=0x0B;//INFLA
+  c2:	0f 2e       	mov	r0, r31
+  c4:	fb e0       	ldi	r31, 0x0B	; 11
+  c6:	9f 2e       	mov	r9, r31
+  c8:	f0 2d       	mov	r31, r0
+}
+int apreto_boton1(int number)
+{
+	if(number==30)
+	{
+		number=5;
+  ca:	69 82       	std	Y+1, r6	; 0x01
+  cc:	25 2c       	mov	r2, r5
+{
+case 1:
+	PORTD=0x31; //MODO 1
+	break;
+case 2:
+	PORTD=0x32; //MODO 2
+  ce:	0f 2e       	mov	r0, r31
+  d0:	f2 e3       	ldi	r31, 0x32	; 50
+  d2:	3f 2e       	mov	r3, r31
+  d4:	f0 2d       	mov	r31, r0
+void leds(int led)
+{
+switch (led)
+{
+case 1:
+	PORTD=0x31; //MODO 1
+  d6:	42 ba       	out	0x12, r4	; 18
+	while(1){
+		end=1;
+		endres=1;
+		number=5;
+		leds(1);
+		mostrar_number(number);
+  d8:	86 2d       	mov	r24, r6
+  da:	95 2d       	mov	r25, r5
+  dc:	b2 df       	rcall	.-156    	; 0x42 <mostrar_number>
+	int end=1;
+	int endres=1;
+	configura_puertos();
+	
+	while(1){
+		end=1;
+  de:	21 e0       	ldi	r18, 0x01	; 1
+  e0:	2a 83       	std	Y+2, r18	; 0x02
+  e2:	1b 82       	std	Y+3, r1	; 0x03
+		endres=1;
+		number=5;
+  e4:	e6 2c       	mov	r14, r6
+  e6:	f5 2c       	mov	r15, r5
+		leds(1);
+		mostrar_number(number);
+    while(end&&endres)
+    {
+		while((PINC&0x0F)==0);
+  e8:	83 b3       	in	r24, 0x13	; 19
+  ea:	8f 70       	andi	r24, 0x0F	; 15
+  ec:	e9 f3       	breq	.-6      	; 0xe8 <main+0x66>
+		compare=PINC&0x0F;
+  ee:	03 b3       	in	r16, 0x13	; 19
+  f0:	0f 70       	andi	r16, 0x0F	; 15
+  f2:	10 e0       	ldi	r17, 0x00	; 0
+		while((PINC&0x0F)!=0);
+  f4:	83 b3       	in	r24, 0x13	; 19
+  f6:	8f 70       	andi	r24, 0x0F	; 15
+  f8:	e9 f7       	brne	.-6      	; 0xf4 <main+0x72>
+		if(compare==1){number=apreto_boton1(number);mostrar_number(number);}
+  fa:	01 30       	cpi	r16, 0x01	; 1
+  fc:	11 05       	cpc	r17, r1
+  fe:	69 f4       	brne	.+26     	; 0x11a <main+0x98>
+	}
+	return number;
+}
+int apreto_boton1(int number)
+{
+	if(number==30)
+ 100:	3e e1       	ldi	r19, 0x1E	; 30
+ 102:	e3 16       	cp	r14, r19
+ 104:	f1 04       	cpc	r15, r1
+ 106:	21 f0       	breq	.+8      	; 0x110 <main+0x8e>
+	{
+		number=5;
+	}
+	else
+	{
+		number++;
+ 108:	4f ef       	ldi	r20, 0xFF	; 255
+ 10a:	e4 1a       	sub	r14, r20
+ 10c:	f4 0a       	sbc	r15, r20
+ 10e:	02 c0       	rjmp	.+4      	; 0x114 <main+0x92>
+}
+int apreto_boton1(int number)
+{
+	if(number==30)
+	{
+		number=5;
+ 110:	e9 80       	ldd	r14, Y+1	; 0x01
+ 112:	f2 2c       	mov	r15, r2
+    while(end&&endres)
+    {
+		while((PINC&0x0F)==0);
+		compare=PINC&0x0F;
+		while((PINC&0x0F)!=0);
+		if(compare==1){number=apreto_boton1(number);mostrar_number(number);}
+ 114:	c7 01       	movw	r24, r14
+ 116:	95 df       	rcall	.-214    	; 0x42 <mostrar_number>
+ 118:	1e c0       	rjmp	.+60     	; 0x156 <main+0xd4>
+		if(compare==2){number=apreto_boton2(number);mostrar_number(number);}  
+ 11a:	02 30       	cpi	r16, 0x02	; 2
+ 11c:	11 05       	cpc	r17, r1
+ 11e:	a1 f4       	brne	.+40     	; 0x148 <main+0xc6>
+} 
+// nuevo led
+
+int apreto_boton2(int number)
+{
+	if(number==5)
+ 120:	55 e0       	ldi	r21, 0x05	; 5
+ 122:	e5 16       	cp	r14, r21
+ 124:	f1 04       	cpc	r15, r1
+ 126:	21 f0       	breq	.+8      	; 0x130 <main+0xae>
+	{
+		number=30;
+	}
+	else
+	{
+	 number--;
+ 128:	81 e0       	ldi	r24, 0x01	; 1
+ 12a:	e8 1a       	sub	r14, r24
+ 12c:	f1 08       	sbc	r15, r1
+ 12e:	05 c0       	rjmp	.+10     	; 0x13a <main+0xb8>
+
+int apreto_boton2(int number)
+{
+	if(number==5)
+	{
+		number=30;
+ 130:	0f 2e       	mov	r0, r31
+ 132:	fe e1       	ldi	r31, 0x1E	; 30
+ 134:	ef 2e       	mov	r14, r31
+ 136:	f0 2d       	mov	r31, r0
+ 138:	f1 2c       	mov	r15, r1
+    {
+		while((PINC&0x0F)==0);
+		compare=PINC&0x0F;
+		while((PINC&0x0F)!=0);
+		if(compare==1){number=apreto_boton1(number);mostrar_number(number);}
+		if(compare==2){number=apreto_boton2(number);mostrar_number(number);}  
+ 13a:	c7 01       	movw	r24, r14
+ 13c:	82 df       	rcall	.-252    	; 0x42 <mostrar_number>
+ 13e:	3a 81       	ldd	r19, Y+2	; 0x02
+ 140:	2b 81       	ldd	r18, Y+3	; 0x03
+ 142:	9c 2d       	mov	r25, r12
+ 144:	8d 2d       	mov	r24, r13
+ 146:	0f c0       	rjmp	.+30     	; 0x166 <main+0xe4>
+		if(compare==4){leds(2); number1=number;end=0;} //guarda número 1, cambia led, sale del bucle   
+ 148:	04 30       	cpi	r16, 0x04	; 4
+ 14a:	11 05       	cpc	r17, r1
+ 14c:	21 f4       	brne	.+8      	; 0x156 <main+0xd4>
+{
+case 1:
+	PORTD=0x31; //MODO 1
+	break;
+case 2:
+	PORTD=0x32; //MODO 2
+ 14e:	32 ba       	out	0x12, r3	; 18
+ 150:	ce 2c       	mov	r12, r14
+ 152:	df 2c       	mov	r13, r15
+ 154:	11 c0       	rjmp	.+34     	; 0x178 <main+0xf6>
+		compare=PINC&0x0F;
+		while((PINC&0x0F)!=0);
+		if(compare==1){number=apreto_boton1(number);mostrar_number(number);}
+		if(compare==2){number=apreto_boton2(number);mostrar_number(number);}  
+		if(compare==4){leds(2); number1=number;end=0;} //guarda número 1, cambia led, sale del bucle   
+		if(compare==8){endres=0;}   //RESET sale de los dos bucles
+ 156:	08 30       	cpi	r16, 0x08	; 8
+ 158:	11 05       	cpc	r17, r1
+ 15a:	09 f4       	brne	.+2      	; 0x15e <main+0xdc>
+ 15c:	70 c0       	rjmp	.+224    	; 0x23e <main+0x1bc>
+ 15e:	3a 81       	ldd	r19, Y+2	; 0x02
+ 160:	2b 81       	ldd	r18, Y+3	; 0x03
+ 162:	9c 2d       	mov	r25, r12
+ 164:	8d 2d       	mov	r24, r13
+		end=1;
+		endres=1;
+		number=5;
+		leds(1);
+		mostrar_number(number);
+    while(end&&endres)
+ 166:	ea 81       	ldd	r30, Y+2	; 0x02
+ 168:	fb 81       	ldd	r31, Y+3	; 0x03
+ 16a:	ef 2b       	or	r30, r31
+ 16c:	29 f0       	breq	.+10     	; 0x178 <main+0xf6>
+ 16e:	3a 83       	std	Y+2, r19	; 0x02
+ 170:	2b 83       	std	Y+3, r18	; 0x03
+ 172:	c9 2e       	mov	r12, r25
+ 174:	d8 2e       	mov	r13, r24
+ 176:	b8 cf       	rjmp	.-144    	; 0xe8 <main+0x66>
+		if(compare==8){endres=0;}   //RESET sale de los dos bucles
+    }
+	
+		end=1;
+		number=5;
+		mostrar_number(number);
+ 178:	86 2d       	mov	r24, r6
+ 17a:	95 2d       	mov	r25, r5
+ 17c:	62 df       	rcall	.-316    	; 0x42 <mostrar_number>
+		if(compare==2){number=apreto_boton2(number);mostrar_number(number);}  
+		if(compare==4){leds(2); number1=number;end=0;} //guarda número 1, cambia led, sale del bucle   
+		if(compare==8){endres=0;}   //RESET sale de los dos bucles
+    }
+	
+		end=1;
+ 17e:	01 e0       	ldi	r16, 0x01	; 1
+ 180:	10 e0       	ldi	r17, 0x00	; 0
+		number=5;
+ 182:	e6 2c       	mov	r14, r6
+ 184:	f5 2c       	mov	r15, r5
+		mostrar_number(number);
+	while(end&&endres)
+	{
+	   while((PINC&0x0F)==0);
+ 186:	83 b3       	in	r24, 0x13	; 19
+ 188:	8f 70       	andi	r24, 0x0F	; 15
+ 18a:	e9 f3       	breq	.-6      	; 0x186 <main+0x104>
+	   compare=PINC&0x0F;
+ 18c:	83 b3       	in	r24, 0x13	; 19
+ 18e:	8f 70       	andi	r24, 0x0F	; 15
+ 190:	28 2f       	mov	r18, r24
+ 192:	30 e0       	ldi	r19, 0x00	; 0
+ 194:	3b 83       	std	Y+3, r19	; 0x03
+ 196:	2a 83       	std	Y+2, r18	; 0x02
+	   while((PINC&0x0F)!=0);
+ 198:	83 b3       	in	r24, 0x13	; 19
+ 19a:	8f 70       	andi	r24, 0x0F	; 15
+ 19c:	e9 f7       	brne	.-6      	; 0x198 <main+0x116>
+	   if(compare==1){number=apreto_boton1(number);mostrar_number(number);}
+ 19e:	4a 81       	ldd	r20, Y+2	; 0x02
+ 1a0:	5b 81       	ldd	r21, Y+3	; 0x03
+ 1a2:	41 30       	cpi	r20, 0x01	; 1
+ 1a4:	51 05       	cpc	r21, r1
+ 1a6:	69 f4       	brne	.+26     	; 0x1c2 <main+0x140>
+	}
+	return number;
+}
+int apreto_boton1(int number)
+{
+	if(number==30)
+ 1a8:	5e e1       	ldi	r21, 0x1E	; 30
+ 1aa:	e5 16       	cp	r14, r21
+ 1ac:	f1 04       	cpc	r15, r1
+ 1ae:	21 f0       	breq	.+8      	; 0x1b8 <main+0x136>
+	{
+		number=5;
+	}
+	else
+	{
+		number++;
+ 1b0:	8f ef       	ldi	r24, 0xFF	; 255
+ 1b2:	e8 1a       	sub	r14, r24
+ 1b4:	f8 0a       	sbc	r15, r24
+ 1b6:	02 c0       	rjmp	.+4      	; 0x1bc <main+0x13a>
+}
+int apreto_boton1(int number)
+{
+	if(number==30)
+	{
+		number=5;
+ 1b8:	e9 80       	ldd	r14, Y+1	; 0x01
+ 1ba:	f2 2c       	mov	r15, r2
+	while(end&&endres)
+	{
+	   while((PINC&0x0F)==0);
+	   compare=PINC&0x0F;
+	   while((PINC&0x0F)!=0);
+	   if(compare==1){number=apreto_boton1(number);mostrar_number(number);}
+ 1bc:	c7 01       	movw	r24, r14
+ 1be:	41 df       	rcall	.-382    	; 0x42 <mostrar_number>
+ 1c0:	21 c0       	rjmp	.+66     	; 0x204 <main+0x182>
+	   if(compare==2){number=apreto_boton2(number);mostrar_number(number);}
+ 1c2:	ea 81       	ldd	r30, Y+2	; 0x02
+ 1c4:	fb 81       	ldd	r31, Y+3	; 0x03
+ 1c6:	32 97       	sbiw	r30, 0x02	; 2
+ 1c8:	a1 f4       	brne	.+40     	; 0x1f2 <main+0x170>
+} 
+// nuevo led
+
+int apreto_boton2(int number)
+{
+	if(number==5)
+ 1ca:	f5 e0       	ldi	r31, 0x05	; 5
+ 1cc:	ef 16       	cp	r14, r31
+ 1ce:	f1 04       	cpc	r15, r1
+ 1d0:	21 f0       	breq	.+8      	; 0x1da <main+0x158>
+	{
+		number=30;
+	}
+	else
+	{
+	 number--;
+ 1d2:	21 e0       	ldi	r18, 0x01	; 1
+ 1d4:	e2 1a       	sub	r14, r18
+ 1d6:	f1 08       	sbc	r15, r1
+ 1d8:	05 c0       	rjmp	.+10     	; 0x1e4 <main+0x162>
+
+int apreto_boton2(int number)
+{
+	if(number==5)
+	{
+		number=30;
+ 1da:	0f 2e       	mov	r0, r31
+ 1dc:	fe e1       	ldi	r31, 0x1E	; 30
+ 1de:	ef 2e       	mov	r14, r31
+ 1e0:	f0 2d       	mov	r31, r0
+ 1e2:	f1 2c       	mov	r15, r1
+	{
+	   while((PINC&0x0F)==0);
+	   compare=PINC&0x0F;
+	   while((PINC&0x0F)!=0);
+	   if(compare==1){number=apreto_boton1(number);mostrar_number(number);}
+	   if(compare==2){number=apreto_boton2(number);mostrar_number(number);}
+ 1e4:	c7 01       	movw	r24, r14
+ 1e6:	2d df       	rcall	.-422    	; 0x42 <mostrar_number>
+ 1e8:	80 2f       	mov	r24, r16
+ 1ea:	91 2f       	mov	r25, r17
+ 1ec:	2a 2d       	mov	r18, r10
+ 1ee:	3b 2d       	mov	r19, r11
+ 1f0:	2a c0       	rjmp	.+84     	; 0x246 <main+0x1c4>
+	   if(compare==4){leds(3); number2=number;end=0;} //guarda número 1, cambia led, sale del bucle
+ 1f2:	4a 81       	ldd	r20, Y+2	; 0x02
+ 1f4:	5b 81       	ldd	r21, Y+3	; 0x03
+ 1f6:	44 30       	cpi	r20, 0x04	; 4
+ 1f8:	51 05       	cpc	r21, r1
+ 1fa:	21 f4       	brne	.+8      	; 0x204 <main+0x182>
+	break;
+case 2:
+	PORTD=0x32; //MODO 2
+	break;
+case 3:
+	PORTD=0x31; //MODO OPE
+ 1fc:	42 ba       	out	0x12, r4	; 18
+ 1fe:	ae 2c       	mov	r10, r14
+ 200:	bf 2c       	mov	r11, r15
+ 202:	09 c0       	rjmp	.+18     	; 0x216 <main+0x194>
+	   compare=PINC&0x0F;
+	   while((PINC&0x0F)!=0);
+	   if(compare==1){number=apreto_boton1(number);mostrar_number(number);}
+	   if(compare==2){number=apreto_boton2(number);mostrar_number(number);}
+	   if(compare==4){leds(3); number2=number;end=0;} //guarda número 1, cambia led, sale del bucle
+	   if(compare==8){endres=0;}   //RESET sale de los dos bucles
+ 204:	8a 81       	ldd	r24, Y+2	; 0x02
+ 206:	9b 81       	ldd	r25, Y+3	; 0x03
+ 208:	08 97       	sbiw	r24, 0x08	; 8
+ 20a:	01 f1       	breq	.+64     	; 0x24c <main+0x1ca>
+ 20c:	80 2f       	mov	r24, r16
+ 20e:	91 2f       	mov	r25, r17
+ 210:	2a 2d       	mov	r18, r10
+ 212:	3b 2d       	mov	r19, r11
+ 214:	18 c0       	rjmp	.+48     	; 0x246 <main+0x1c4>
+	 }
+	PORTB=15*16+15; //Vacío en los displays
+ 216:	78 ba       	out	0x18, r7	; 24
+ 218:	05 c0       	rjmp	.+10     	; 0x224 <main+0x1a2>
+    }
+	
+		end=1;
+		number=5;
+		mostrar_number(number);
+	while(end&&endres)
+ 21a:	08 2f       	mov	r16, r24
+ 21c:	19 2f       	mov	r17, r25
+ 21e:	a2 2e       	mov	r10, r18
+ 220:	b3 2e       	mov	r11, r19
+ 222:	b1 cf       	rjmp	.-158    	; 0x186 <main+0x104>
+	   if(compare==8){endres=0;}   //RESET sale de los dos bucles
+	 }
+	PORTB=15*16+15; //Vacío en los displays
+	while(endres)
+	{
+		PORTD=0x30;
+ 224:	82 ba       	out	0x12, r8	; 18
+		esperar_sec(number1);
+ 226:	8c 2d       	mov	r24, r12
+ 228:	9d 2d       	mov	r25, r13
+ 22a:	14 df       	rcall	.-472    	; 0x54 <esperar_sec>
+		PORTD=0x0B;//INFLA
+ 22c:	92 ba       	out	0x12, r9	; 18
+		esperar_sec(number2);
+ 22e:	8a 2d       	mov	r24, r10
+ 230:	9b 2d       	mov	r25, r11
+ 232:	10 df       	rcall	.-480    	; 0x54 <esperar_sec>
+		if((PINC&0x0F)!=0){endres=0;};
+ 234:	83 b3       	in	r24, 0x13	; 19
+ 236:	8f 70       	andi	r24, 0x0F	; 15
+ 238:	09 f0       	breq	.+2      	; 0x23c <main+0x1ba>
+ 23a:	4d cf       	rjmp	.-358    	; 0xd6 <main+0x54>
+ 23c:	f3 cf       	rjmp	.-26     	; 0x224 <main+0x1a2>
+		if(compare==8){endres=0;}   //RESET sale de los dos bucles
+    }
+	
+		end=1;
+		number=5;
+		mostrar_number(number);
+ 23e:	86 2d       	mov	r24, r6
+ 240:	95 2d       	mov	r25, r5
+ 242:	ff de       	rcall	.-514    	; 0x42 <mostrar_number>
+ 244:	03 c0       	rjmp	.+6      	; 0x24c <main+0x1ca>
+	while(end&&endres)
+ 246:	01 2b       	or	r16, r17
+ 248:	41 f7       	brne	.-48     	; 0x21a <main+0x198>
+ 24a:	e5 cf       	rjmp	.-54     	; 0x216 <main+0x194>
+	   if(compare==1){number=apreto_boton1(number);mostrar_number(number);}
+	   if(compare==2){number=apreto_boton2(number);mostrar_number(number);}
+	   if(compare==4){leds(3); number2=number;end=0;} //guarda número 1, cambia led, sale del bucle
+	   if(compare==8){endres=0;}   //RESET sale de los dos bucles
+	 }
+	PORTB=15*16+15; //Vacío en los displays
+ 24c:	78 ba       	out	0x18, r7	; 24
+ 24e:	43 cf       	rjmp	.-378    	; 0xd6 <main+0x54>
+
+00000250 <__divmodhi4>:
+ 250:	97 fb       	bst	r25, 7
+ 252:	07 2e       	mov	r0, r23
+ 254:	16 f4       	brtc	.+4      	; 0x25a <__divmodhi4+0xa>
+ 256:	00 94       	com	r0
+ 258:	06 d0       	rcall	.+12     	; 0x266 <__divmodhi4_neg1>
+ 25a:	77 fd       	sbrc	r23, 7
+ 25c:	08 d0       	rcall	.+16     	; 0x26e <__divmodhi4_neg2>
+ 25e:	0b d0       	rcall	.+22     	; 0x276 <__udivmodhi4>
+ 260:	07 fc       	sbrc	r0, 7
+ 262:	05 d0       	rcall	.+10     	; 0x26e <__divmodhi4_neg2>
+ 264:	3e f4       	brtc	.+14     	; 0x274 <__divmodhi4_exit>
+
+00000266 <__divmodhi4_neg1>:
+ 266:	90 95       	com	r25
+ 268:	81 95       	neg	r24
+ 26a:	9f 4f       	sbci	r25, 0xFF	; 255
+ 26c:	08 95       	ret
+
+0000026e <__divmodhi4_neg2>:
+ 26e:	70 95       	com	r23
+ 270:	61 95       	neg	r22
+ 272:	7f 4f       	sbci	r23, 0xFF	; 255
+
+00000274 <__divmodhi4_exit>:
+ 274:	08 95       	ret
+
+00000276 <__udivmodhi4>:
+ 276:	aa 1b       	sub	r26, r26
+ 278:	bb 1b       	sub	r27, r27
+ 27a:	51 e1       	ldi	r21, 0x11	; 17
+ 27c:	07 c0       	rjmp	.+14     	; 0x28c <__udivmodhi4_ep>
+
+0000027e <__udivmodhi4_loop>:
+ 27e:	aa 1f       	adc	r26, r26
+ 280:	bb 1f       	adc	r27, r27
+ 282:	a6 17       	cp	r26, r22
+ 284:	b7 07       	cpc	r27, r23
+ 286:	10 f0       	brcs	.+4      	; 0x28c <__udivmodhi4_ep>
+ 288:	a6 1b       	sub	r26, r22
+ 28a:	b7 0b       	sbc	r27, r23
+
+0000028c <__udivmodhi4_ep>:
+ 28c:	88 1f       	adc	r24, r24
+ 28e:	99 1f       	adc	r25, r25
+ 290:	5a 95       	dec	r21
+ 292:	a9 f7       	brne	.-22     	; 0x27e <__udivmodhi4_loop>
+ 294:	80 95       	com	r24
+ 296:	90 95       	com	r25
+ 298:	bc 01       	movw	r22, r24
+ 29a:	cd 01       	movw	r24, r26
+ 29c:	08 95       	ret
+
+0000029e <_exit>:
+ 29e:	f8 94       	cli
+
+000002a0 <__stop_program>:
+ 2a0:	ff cf       	rjmp	.-2      	; 0x2a0 <__stop_program>
